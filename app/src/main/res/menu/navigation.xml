@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@drawable/ic_icono_home" android:id="@+id/navigation_inicio" android:title="@string/title_inicio"/>
+    <item android:icon="@drawable/ic_icono_like" android:id="@+id/navigation_favoritas" android:title="@string/title_favoritas"/>
+    <item android:icon="@drawable/ic_icono_alarma" android:id="@+id/navigation_alertas" android:title="@string/title_alertas"/>
+</menu>

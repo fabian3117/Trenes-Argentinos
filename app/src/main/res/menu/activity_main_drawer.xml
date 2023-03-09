@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+        <item android:icon="@drawable/ic_person_black_24dp" android:id="@+id/nav_novisible" android:visible="false" android:title="Vacio"/>
+        <item android:icon="@drawable/ic_person_black_24dp" android:id="@+id/nav_login" android:title="Ingresar"/>
+        <item android:icon="@drawable/ic_person_black_24dp" android:id="@+id/nav_perfil" android:title="Perfil"/>
+        <item android:icon="@drawable/ic_settings_black_24dp" android:id="@+id/nav_config" android:title="Configuración"/>
+        <item android:icon="@drawable/ic_chat_black_24dp" android:id="@+id/nav_atencion" android:title="Atención al pasajero"/>
+        <item android:icon="@drawable/ic_bookmark_black_24dp" android:id="@+id/nav_info_estaciones" android:title="Info de estaciones"/>
+        <item android:icon="@drawable/ic_book" android:id="@+id/nav_biblioteca_del_congreso" android:title="Biblioteca del Congreso"/>
+        <item android:icon="@drawable/ic_exit_to_app_black_24dp" android:id="@+id/nav_logout" android:title="Cerrar sesión"/>
+    </group>
+</menu>
