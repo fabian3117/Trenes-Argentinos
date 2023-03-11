@@ -123,4 +123,6 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="texto1">Texto1</string>
+    <string name="notificaciones">Notificaciones</string>
+    <string name="horarios">Horarios</string>
 </resources>

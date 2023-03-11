@@ -15,4 +15,9 @@ public  class General {
     public static String Token;
     public static Retrofit retrofit = new Retrofit.Builder().baseUrl("https://apiarribos.sofse.gob.ar/").addConverterFactory(GsonConverterFactory.create()).build();
     public static TrenesApi trenesApi = retrofit.create(TrenesApi.class);
+    final public static int ID_Sarmiento=1;
+    final public static int ID_Mitre=5;
+    final public static int ID_Roca=11;
+    final public static int RadioTest=100;
+
 }

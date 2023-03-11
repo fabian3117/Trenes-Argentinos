@@ -97,11 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-
-
-
-
-
         //-->   Tendria que simplificar este codigo para que no se vea tan feo en la forma de pedir la informacion  <--
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(this.getResources().getString(R.string.trenesApiUrl)).addConverterFactory(GsonConverterFactory.create()).build();

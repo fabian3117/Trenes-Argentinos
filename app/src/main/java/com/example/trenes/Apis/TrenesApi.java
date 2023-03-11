@@ -40,8 +40,11 @@ public interface TrenesApi {
   //  @GET("v1/estaciones/{id}/horarios/groups")
 //   Call<PaginationContainer<Group<Horario>>> getGroups(@Path("id") Integer num, @Query("fields") String str, @Query("lineas") RetrofitArray<Integer> retrofitArray);
 
-   // @GET("v1/estaciones/{id}/horarios")
-    //Call<PaginationContainer<Horario>> getHorarios(@Path("id") Integer num, @Query("hasta") Integer num2, @Query("fields") String str, @Query("lineas") RetrofitArray<Integer> retrofitArray, @Query("ramales") RetrofitArray<Integer> retrofitArray2, @Query("cabeceraFinal") RetrofitArray<Integer> retrofitArray3, @Query("servicio") Integer num3, @Query("limit") Integer num4);
+    @GET("v1/estaciones/{id}/horarios")
+    Call<PaginationContainer<Horario>> getHorarios(@Header("Authorization") String Authorization,@Path("id") Integer num);
+    //    Call<PaginationContainer<Horario>> getHorarios(@Header("Authorization") String Authorization,@Path("id") Integer num, @Query("hasta") Integer num2);  //-->   Incluye modificador para delimitar hasta donde ir   <--
+//    @GET("v1/estaciones/{id}/horarios")
+  //  Call<PaginationContainer<Horario>> getHorarios(@Header("Authorization") String Authorization,@Path("id") Integer num, @Query("hasta") Integer num2, @Query("fields") String str, @Query("lineas") RetrofitArray<Integer> retrofitArray, @Query("ramales") RetrofitArray<Integer> retrofitArray2, @Query("cabeceraFinal") RetrofitArray<Integer> retrofitArray3, @Query("servicio") Integer num3, @Query("limit") Integer num4);
 
 /*    @GET("v1/estaciones/{id}/horarios")
     Call<PaginationContainer<Horario>> getItinerario(@Path("id") Integer num, @Query("hasta") Integer num2, @Query("fecha") String str, @Query("tipo") String str2, @Query("servicio") Integer num3, @Query("fields") String str3);
@@ -56,5 +59,5 @@ public interface TrenesApi {
     Call<ReclamosResponse> postReclamo(@Body ReclamosRequest reclamosRequest);
 
     @GET("v1/estaciones/cercanas")
-    Call<PaginationContainer<CercanasResponse>> buscarCercanas(@Header("Authorization")String token,@Query("lat") double latitude, @Query("lon") double longitude,@Query("id") int i,@Query("rad")int rad);
+    Call<PaginationContainer<CercanasResponse>> buscarCercanas(@Header("Authorization")String token,@Query("lat") double latitude, @Query("lon") double longitude,@Query("lineas") int i,@Query("rad")int rad);
 }
