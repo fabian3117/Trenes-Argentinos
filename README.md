@@ -34,4 +34,28 @@ Se añadiran caracteristicas que considero mas acertadas como usuario de la mism
  
  -Simplicidad en su utilizacion.
  
+ ### Diagramas
  
+ ## 🚇Pantalla de inicio
+ Esta sera la pantalla de inicio donde se vera toda la informacion pertinente
+ <p>
+ <img src="https://raw.githubusercontent.com/fabian3117/Trenes-Argentinos/main/Princi.jpg"width="400" height="400" </img>
+ </p>
+ <br>
+ 
+ ## 🛠️Caracteristicas.
+ - Disponemos de 2 elementos botones con estilo _Chip_ los cuales mostraran 2 estaciones favoritas asociadas a cada ramal.
+ - Una vez tocado el ramal obtendremos toda la informacion relevante sin tener que pasar a un nuevo activity como es el caso de la aplicacion oficial.
+ - Donde se indica ESTADO SERVICIO se mostrada un detalle sobre el mismo para no requerir ir a una activity distinta para obtener la informacion.
+ - En la parte inferior se podrá cambiar entre el _fragment_ de visualizacion de los ramales como se observa _En la captura_ y un apartado para configurar las alertas.
+ ## Descripción de las alertas ‼️🚨.
+ Para las alertas se podra configurar en funcion de un horario para a través de un servicio en segundo plano obtener informacion sobre mi ramal.
+ Ejemplo:
+ Salgo hacia la estacion de _merlo_ perteneciente al ramal _Sarmiento_ todos los dias a las 12:00🕛.
+ Entonces podré configurar el servicio de alertas para que a través de un proceso en segundo plano el celular verifique utilizando la API el estado de dicho ramal y caso de haber alguna alerta _Demoras-Corte por X motivo-Problemas operativos_.
+ 🫡⚠️ Se notificará mediante una alerta al usuario.
+ ## 😉Diagrama de funcionamiento de la aplicacion.
+ ⚠️Este diagrama es un bosquejo y no representa la versión final de la aplicación, ni su estado actual de desarrollo.
+ <p>
+ <img src="https://raw.githubusercontent.com/fabian3117/Trenes-Argentinos/main/Diagram.jpg" </img>
+ </p>
