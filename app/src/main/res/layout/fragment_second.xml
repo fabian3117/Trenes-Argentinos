@@ -1,27 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SecondFragment">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:focusable="true"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Alertas Establecidas"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_Alertas"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textview_second"
+    </androidx.recyclerview.widget.RecyclerView>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/button_second"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/previous"
+        app:lottie_fileName="fotbal.json"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_speed="2"
+        />
+</LinearLayout>
+    <FrameLayout
+        android:id="@+id/standard_bottom_sheet"
+        style="@style/Widget.Material3.BottomSheet"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:layout_height="400dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_second" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_width="match_parent">
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aniadir nuevo"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DIAS"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horario"
+                android:textSize="15sp"
+                android:id="@+id/AlertasBTNHorario"
+                style="@style/Widget.Material3.Button.TextButton"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/LayoutHorarioAlerta"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <NumberPicker
+                    android:id="@+id/SelectorHora"
+                    android:layout_width="wrap_content"
+                    android:textSize="15sp"
+                    android:layout_height="wrap_content"
+                    />
+                <NumberPicker
+                    android:id="@+id/SelectorMin"
+                    android:layout_width="wrap_content"
+                    android:textSize="15sp"
+                    android:layout_height="wrap_content"
+                    />
+                <Button
+                    android:layout_margin="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Listo"
+                    android:id="@+id/SecondBTNListo"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RAMAL"/>
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/BTNTrenCosta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tren de la costa"
+                    android:textSize="15sp"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:textColor="@color/mtrl_text_btn_text_color_selector"
+                    android:paddingLeft="@dimen/mtrl_btn_text_btn_padding_left"
+                   />
+                <Button
+                    android:id="@+id/BTNSarmiento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sarmiento"
+                    android:textSize="15sp"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:textColor="@color/mtrl_text_btn_text_color_selector"
+                    android:paddingLeft="@dimen/mtrl_btn_text_btn_padding_left"
+                    />
+                <Button
+                    android:id="@+id/BTNMitre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mitre"
+                    android:textSize="15sp"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:textColor="@color/mtrl_text_btn_text_color_selector"
+                    android:paddingLeft="@dimen/mtrl_btn_text_btn_padding_left"/>
+                <Button
+                    android:id="@+id/BTNRoca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Roca"
+                    android:textSize="15sp"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:textColor="@color/mtrl_text_btn_text_color_selector"
+                    android:paddingLeft="@dimen/mtrl_btn_text_btn_padding_left"/>
+            </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+        </LinearLayout>
+
+    </FrameLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="10dp"
+        app:icon="@drawable/check"
+        android:text="Nuevo"
+        style="?attr/floatingActionButtonLargeStyle"
+        app:backgroundTint="#2196F3"
+        android:contentDescription="Aniadir nuevo registro de alertas"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

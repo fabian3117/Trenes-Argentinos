@@ -1,8 +1,17 @@
 package com.example.trenes;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.trenes.Apis.AdapterLineas;
@@ -16,8 +25,11 @@ import com.example.trenes.Apis.TrenesApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Base64;
@@ -25,7 +37,9 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -37,10 +51,12 @@ import com.example.trenes.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -51,28 +67,56 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AppBarConfiguration appBarConfiguration;
+    public FrameLayout FragmentPrincipal;
+    public BottomNavigationView bottom_navigation;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private ActivityMainBinding binding;
+    SharedPreferences sharedPreferences;
     private FusedLocationProviderClient fusedLocationClient;
     public static String lastToken;
-
+    public String[] Array;  //-->   Aca se guardan las alertas  <--
     public static boolean TokenObtenido=false;
-    public RecyclerView recycler_viewLineas;
-    public AdapterLineas adapterLineas=new AdapterLineas();
-
+    int Hora=15,Minuto=28;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        recycler_viewLineas=findViewById(R.id.recycler_viewLineas);
-        recycler_viewLineas.setLayoutManager(new LinearLayoutManager(this));
-        recycler_viewLineas.setAdapter(adapterLineas);
-        String userApi = getUserApi();
-        String codificar = codificar(userApi);
+        //-->   Obtencion de sharedPreferences  <--
+        sharedPreferences= getSharedPreferences(General.PalabraSharedPref, Context.MODE_PRIVATE);
+       // GuardarShared(14,42,General.ID_Mitre);
+
+        CargaShared();
+        //-->   Vinculacion elementos - xml <---
+        View VistaRaiz = findViewById(android.R.id.content);
+        bottom_navigation=findViewById(R.id.bottom_navigation);
+        FragmentPrincipal=findViewById(R.id.FragmentPrincipal);
+        AdapterFragmentPrincipal fragmentPrincipal=new AdapterFragmentPrincipal();
+        getSupportFragmentManager().beginTransaction().add(R.id.FragmentPrincipal,fragmentPrincipal).commit();
+        bottom_navigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Log.e("MIRA","TOCO COSA "+item.getTitle());
+                if(item.getTitle()==getResources().getString(R.string.notificaciones)){
+                    //-->   Muestro el fragment de notificaciones   <--
+                    getSupportFragmentManager().beginTransaction().replace(R.id.FragmentPrincipal,new SecondFragment(Array)).commit();
+                }
+                else if(item.getTitle()==getResources().getString(R.string.horarios)){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.FragmentPrincipal,fragmentPrincipal).commit();
+/*
+                    //-->   Este codigo elimina el fragment que seria de notificaciones pero no elimina el actual de horarios   <--
+                    getSupportFragmentManager().popBackStack();
+                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.FragmentPrincipal);
+                    if(fragment != null){
+                        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                    }
+*/
+                }
+                return false;
+            }
+        });
+        String userApi=General.getUserApi();
+        String codificar = General.codificar(userApi);
         //-->   Voy a pedir la ubicacion y la guardo para mas adelante  <--
         /*
          *  Permiso indicado en manifest -Listo
@@ -81,16 +125,14 @@ public class MainActivity extends AppCompatActivity {
          */
         fusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         if (ContextCompat.checkSelfPermission(this.getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {ActivityCompat.requestPermissions(this,new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_LOCATION_PERMISSION);}
-        View VistaRaiz = findViewById(android.R.id.content);
         fusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
                             General.localizacion=location;
-                            Snackbar.make(VistaRaiz, "Este es un Snackbar", Snackbar.LENGTH_SHORT).show();
-
                         }
                         else{
+                            General.localizacion=null;  //-->   Para que no apunte a cualquier lado <--
                             Snackbar.make(VistaRaiz, "No Pudimos obtener tu ubicacion", Snackbar.LENGTH_SHORT).show();
                         }
                     }
@@ -114,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 trenesApi.getLineas(lastToken).enqueue(new Callback<List<LineaSimple>>() {
                     @Override
                     public void onResponse(Call<List<LineaSimple>> call, Response<List<LineaSimple>> response) {
-                        adapterLineas.setData(response.body());
+                        fragmentPrincipal.Datos(response.body());
                     }
 
                     @Override
@@ -129,18 +171,63 @@ public class MainActivity extends AppCompatActivity {
                 TokenObtenido=false;
             }
         });
+        Intent intent=new Intent(getApplicationContext(),ServiAlerta.class);
+       /* long Intervalor=1000*30;    //-->   Cada Minuto <--
+        long firstTriggerMillis = System.currentTimeMillis() + Intervalor;
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstTriggerMillis, Intervalor,pendingIntent);
+*/
+         AlarmManager alarmMgr;
+         PendingIntent alarmIntent;
+
+
+        //-->   Obtengo una instancia del servicio de manejos de alarmas    <--
+        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        // Crear un Intent para el servicio
+        Intent intentT = new Intent(this, ServiAlerta.class);
+        // Crear un PendingIntent para la alarma
+        alarmIntent = PendingIntent.getService(this, 0, intentT, PendingIntent.FLAG_MUTABLE);
+        // Establecer la hora de inicio de la alarma
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(0);
+        calendar.set(Calendar.HOUR_OF_DAY, Hora);
+        calendar.set(Calendar.MINUTE, Minuto);
+        //-->   Programo la alarma  <--
+        //-->   Aca se relanza la alarma por lo tanto si opmito este codigo no se relanzaria <--
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        //startService(intent);
 
     }
-    String getUserApi() {
-        Date date = new Date();
-        return Base64.encodeToString((new SimpleDateFormat("yyyyMMdd").format(date) + "sofse").getBytes(), 2);
+    public void CargaShared(){
+        sharedPreferences= getSharedPreferences(General.PalabraSharedPref, Context.MODE_PRIVATE);
+        //-->   Obtengo las alertas que se predefinieron    <--
+        String inter=sharedPreferences.getString(General.GuardadoAlarmas,"");
+        //-->   Obtengo mi String[] <--
+        Array=inter.split("-");
     }
-    String codificar(String str) {
-        String stringBuffer = new StringBuffer(Base64.encodeToString(new StringBuffer(Base64.encodeToString(str.getBytes(), 2).replace("a", "#t").replace("e", "#x").replace("i", "#f").replace("o", "#l").replace("u", "#7").replace("=", "#g")).reverse().toString().getBytes(), 2).replace("a", "#j").replace("e", "#p").replace("i", "#w").replace("o", "#8").replace("u", "#0").replace("=", "#v")).reverse().toString();
-        try {
-            return URLEncoder.encode(stringBuffer, "utf-8");
-        } catch (UnsupportedEncodingException unused) {
-            return stringBuffer;
+    public void GuardarShared(int Hora,int Min,int ID_R){
+    if(sharedPreferences==null){
+    //-->   Emito una alerta al usuario <--
+        Log.e("Guardado","PROBLEMA CON EL SHAREDPREFERENCE NULO");
+        return;
+    }
+         //-->   Genero mi cadena caracteristica <--
+        String H=(Hora<9)?"0"+String.valueOf(Hora):String.valueOf(Hora);
+        String M=(Min<9)?"0"+String.valueOf(Min):String.valueOf(Min);
+        String Valor=H+M+String.valueOf(ID_R)+General.FinDato;
+
+        SharedPreferences.Editor edit =sharedPreferences.edit();
+        if(edit==null){
+            Log.e("Guardado","Problemas en la apertura del edit del sharedpreference");
+            return;
         }
+        String buf=sharedPreferences.getString(General.GuardadoAlarmas,"");
+        buf+=Valor;
+        edit.putString(General.GuardadoAlarmas,buf);
+        edit.apply();
+
     }
 }

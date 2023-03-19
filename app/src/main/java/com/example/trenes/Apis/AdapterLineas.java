@@ -96,24 +96,19 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
             layoutLinea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e("TAG","TOCAMOS :  "+ID_Lin);
                     if(tocada){
                          Context contexto=view.getContext();
                         //-->   Ahora utilizando la ubicacion y la linea que se toco deberia mostrar la estacion mas cercana    <--
                         General.trenesApi.buscarCercanas(General.Token,General.localizacion.getLatitude(),General.localizacion.getLongitude(),ID_Lin,General.RadioTest).enqueue(new Callback<PaginationContainer<CercanasResponse>>() {
                             @Override
                             public void onResponse(Call<PaginationContainer<CercanasResponse>> call, Response<PaginationContainer<CercanasResponse>> response) {
-                             Log.e("Ubicacion",General.localizacion.getLatitude()+","+General.localizacion.getLongitude());
-
                              ArrayList<String> Autocomplet = new ArrayList<>();
                              IdEstacion[0] =response.body().results.get(0).estacion.getId();
                              for (int i=0;i<response.body().results.size();i++){
                                 Autocomplet.add(response.body().results.get(i).estacion.nombre);
-
                              }
                              ArrayAdapter<String> adapter= new ArrayAdapter<String>(contexto, android.R.layout.simple_dropdown_item_1line,Autocomplet);
-                                TextEntrada.setAdapter(adapter);
-                             Log.e("SALIDA",response.body().getResults().get(0).estacion.getNombre());
+                             TextEntrada.setAdapter(adapter);
                              BusEstacion.setHint(response.body().getResults().get(0).estacion.getNombre());
                             }
 
@@ -138,17 +133,13 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
                     //-->   Voy a pantalla de busqueda puntual de la estacion deseada   <--
                     //-->   Utilizando bundle le pasare la informacion Ramal-Estacion   <--
                     Bundle Datos=new Bundle();
-                    Log.e("TOCAMOS", String.valueOf(IdEstacion[0]));
                     Datos.putInt("Estacion",IdEstacion[0]); //-->   ID de estacion de interes   <--
                     Intent Cambio=new Intent(view.getContext(), EstacionVer.class);
+                    Cambio.putExtras(Datos);
                     view.getContext().startActivity(Cambio);
 
                 }
             });
-        }
-        public void Colapsar(){
-            //-->   Esta funcion deberia encargarse de colapsar todos los elementos para que no se sature la vista <---
-
         }
 
     }

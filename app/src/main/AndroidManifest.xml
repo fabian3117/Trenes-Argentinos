@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,6 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Trenes"
         tools:targetApi="31">
+        <service
+            android:name=".ServiAlerta"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".AlertaPrueba"
+            android:exported="false" />
+
         <activity
             android:name=".EstacionVer"
             android:exported="false">
@@ -47,6 +55,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <service android:name=".ServicioAlerta" />
     </application>
 
 </manifest>

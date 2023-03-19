@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    android:layout_centerInParent="true"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/campana"
+                />
+            <TextView
+                android:id="@+id/AlertaHora"
+                android:layout_width="wrap_content"
+                android:text="Alerta A"
+                android:textSize="25sp"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/AlertaRamal"
+                android:text="Ramal"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
