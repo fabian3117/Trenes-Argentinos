@@ -28,6 +28,5 @@ public class AdapterFragmentPrincipal extends Fragment {
     }
     public void Datos(List<LineaSimple> list){
         adapterLineas.setData(list);
-
     }
 }

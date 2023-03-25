@@ -4,14 +4,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"   >
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:gravity="center">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -90,6 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/MasDeta"
+                android:contentDescription="Este Elemento muestra mas informacion del servicio"
                 android:text="El estado se encuentra : " />
             <LinearLayout
                 android:layout_width="match_parent"

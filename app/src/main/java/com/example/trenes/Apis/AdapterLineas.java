@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.trenes.AdapterTrenVer;
 import com.example.trenes.EstacionVer;
 import com.example.trenes.MainActivity;
 import com.example.trenes.R;
@@ -33,7 +34,9 @@ import retrofit2.Response;
 
 public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder> {
     List<LineaSimple> listado;
-
+    ArrayList<String> Autocomplet = new ArrayList<>();
+    ArrayList<Integer> Ides=new ArrayList<>();
+    int I_Ram;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,6 +47,7 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
 
     public void setData(List<LineaSimple> list) {
         this.listado = list;
+
         notifyDataSetChanged();
     }
     @Override
@@ -52,6 +56,7 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
         holder.ID_Lin=this.listado.get(position).id;
         holder.txtLinea.setText(lineaSimple.getNombre());
         holder.imageEstado.setColorFilter(Color.parseColor("#eeeeee"));
+        holder.vs.setText(lineaSimple.getEstado().getMensaje());
         holder.txtEstado.setText("Normal");
         if (lineaSimple.getEstado() != null) {
             try {
@@ -81,11 +86,13 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
         View separador;
         TextView txtEstado;
         TextView txtLinea;
+        TextView vs;
         int ID_Lin;
+        int ID_Rama;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            final int[] IdEstacion = new int[1];
+            int[] IdEstacion = new int[1];
             txtLinea=itemView.findViewById(R.id.txt_linea);
             txtEstado=itemView.findViewById(R.id.txt_estado);
             imageEstado=itemView.findViewById(R.id.image_estado);
@@ -93,6 +100,7 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
             layoutLinea=itemView.findViewById(R.id.LayoutCard);
             BusEstacion=itemView.findViewById(R.id.textField);
             TextEntrada=itemView.findViewById(R.id.TextEntrada);
+            vs=itemView.findViewById(R.id.MasDeta);
             layoutLinea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -102,14 +110,21 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
                         General.trenesApi.buscarCercanas(General.Token,General.localizacion.getLatitude(),General.localizacion.getLongitude(),ID_Lin,General.RadioTest).enqueue(new Callback<PaginationContainer<CercanasResponse>>() {
                             @Override
                             public void onResponse(Call<PaginationContainer<CercanasResponse>> call, Response<PaginationContainer<CercanasResponse>> response) {
-                             ArrayList<String> Autocomplet = new ArrayList<>();
+
                              IdEstacion[0] =response.body().results.get(0).estacion.getId();
                              for (int i=0;i<response.body().results.size();i++){
                                 Autocomplet.add(response.body().results.get(i).estacion.nombre);
+                                 Ides.add(response.body().results.get(i).estacion.getId());
                              }
+
+                             //-->  Tengo que Asociar cada elemento del Autocompletar con el ID_Estacion    <--
+                            //-->   Guardar todos los ID en orden   <--
+                                //-->   Cuando se Luego verifico que indice del Autocomplet tiene el valor ingresado y atraves del indice obtengo el valor asociado <--
+
                              ArrayAdapter<String> adapter= new ArrayAdapter<String>(contexto, android.R.layout.simple_dropdown_item_1line,Autocomplet);
                              TextEntrada.setAdapter(adapter);
                              BusEstacion.setHint(response.body().getResults().get(0).estacion.getNombre());
+
                             }
 
                             @Override
@@ -118,8 +133,8 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
                             }
                         });
                         itemView.findViewById(R.id.Interrupcion).setVisibility(View.VISIBLE);
-                        TextView vs=itemView.findViewById(R.id.MasDeta);
-                        vs.setText(txtEstado.getText());
+
+                       // vs.setText(txtEstado.getText());
                     }
                     else{
                         itemView.findViewById(R.id.Interrupcion).setVisibility(View.GONE);
@@ -133,11 +148,20 @@ public class AdapterLineas extends RecyclerView.Adapter<AdapterLineas.ViewHolder
                     //-->   Voy a pantalla de busqueda puntual de la estacion deseada   <--
                     //-->   Utilizando bundle le pasare la informacion Ramal-Estacion   <--
                     Bundle Datos=new Bundle();
+                    Datos.putInt("Rama",ID_Lin);    //-->   Paso el ID_Ramal    <--
+                    //-->   Tengo que pasar el ID asociado al texto <--
+                    Log.e("MIRA",TextEntrada.getText().toString());
+
+                    for(int i=0;i<Autocomplet.size();i++){
+                        if(Autocomplet.get(i).contains(TextEntrada.getText().toString())){
+                        IdEstacion[0]= Ides.get(i);
+                        i+=Autocomplet.size();  //--->  Para anular la condicion del for y salir    <--
+                        }
+                    }
                     Datos.putInt("Estacion",IdEstacion[0]); //-->   ID de estacion de interes   <--
                     Intent Cambio=new Intent(view.getContext(), EstacionVer.class);
                     Cambio.putExtras(Datos);
                     view.getContext().startActivity(Cambio);
-
                 }
             });
         }

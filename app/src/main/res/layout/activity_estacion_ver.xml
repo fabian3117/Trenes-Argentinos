@@ -22,6 +22,30 @@
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:id="@+id/CrearAcceso"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="7dp"
+            android:src="@drawable/corazon"
+            android:layout_height="25dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="Crear ACCESO DIRECTO"/>
+
+    </LinearLayout>
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"
         app:lottie_fileName="train.json"
@@ -37,4 +61,21 @@
         android:layout_height="wrap_content"/>
 
 </LinearLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="10dp"
+        app:icon="@drawable/ojo"
+        android:id="@+id/ActivaAlertas"
+        android:text="Alertame"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="?attr/floatingActionButtonLargeStyle"
+        app:backgroundTint="#2196F3"
+        android:contentDescription="Activa las alertas"
+
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

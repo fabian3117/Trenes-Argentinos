@@ -26,6 +26,7 @@ public  class General {
     final public static int ID_Sarmiento=1;
     final public static int ID_Mitre=5;
     final public static int ID_Roca=11;
+    final public static int ID_SanMartin=31;
     final public static int RadioTest=100;
     final public static String PalabraSharedPref="TrenesPreferencias";
     final public static String PedirHoraPreferencia="HORA";
@@ -44,6 +45,25 @@ public  class General {
         } catch (UnsupportedEncodingException unused) {
             return stringBuffer;
         }
+    }
+    public static String QueRamalEs(int id){
+        String retorno="";
+        switch (id){
+            case ID_Mitre:
+                retorno="Mitre";
+                break;
+            case ID_Roca:
+                retorno ="Roca";
+                break;
+            case ID_SanMartin:
+                retorno="San martin";
+                break;
+            case ID_Sarmiento:
+                retorno="Sarmiento";
+                break;
+
+        }
+        return retorno;
     }
 public static   void GeneracionToken(){
         TokenRequest tokenRequest=new TokenRequest();

@@ -37,7 +37,8 @@ public class AdapterTrenVer extends RecyclerView.Adapter<AdapterTrenVer.ViewHold
     Calendar calendar=Calendar.getInstance();
     Date dat=Horar.get(position).desde.getLlegada();
     int difMin=calendar.get(Calendar.MINUTE)-dat.getMinutes();
-holder.TiempoRestante.setText(String.valueOf(Math.abs(difMin)));
+    holder.TiempoRestante.setText(String.valueOf(Math.abs(difMin)));
+
     }
 
     @Override

@@ -32,10 +32,12 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -53,6 +55,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -76,16 +79,27 @@ public class MainActivity extends AppCompatActivity {
     public static String lastToken;
     public String[] Array;  //-->   Aca se guardan las alertas  <--
     public static boolean TokenObtenido=false;
-    int Hora=15,Minuto=28;
+    private Handler handler=new Handler();
+    private Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+            try {
+                General.GeneracionTokenSincronico();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(binding.getRoot());
         //-->   Obtencion de sharedPreferences  <--
         sharedPreferences= getSharedPreferences(General.PalabraSharedPref, Context.MODE_PRIVATE);
        // GuardarShared(14,42,General.ID_Mitre);
-
+//    runnable.run();
         CargaShared();
         //-->   Vinculacion elementos - xml <---
         View VistaRaiz = findViewById(android.R.id.content);
@@ -96,21 +110,12 @@ public class MainActivity extends AppCompatActivity {
         bottom_navigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Log.e("MIRA","TOCO COSA "+item.getTitle());
                 if(item.getTitle()==getResources().getString(R.string.notificaciones)){
                     //-->   Muestro el fragment de notificaciones   <--
                     getSupportFragmentManager().beginTransaction().replace(R.id.FragmentPrincipal,new SecondFragment(Array)).commit();
                 }
                 else if(item.getTitle()==getResources().getString(R.string.horarios)){
                     getSupportFragmentManager().beginTransaction().replace(R.id.FragmentPrincipal,fragmentPrincipal).commit();
-/*
-                    //-->   Este codigo elimina el fragment que seria de notificaciones pero no elimina el actual de horarios   <--
-                    getSupportFragmentManager().popBackStack();
-                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.FragmentPrincipal);
-                    if(fragment != null){
-                        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                    }
-*/
                 }
                 return false;
             }
@@ -129,7 +134,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
+
                             General.localizacion=location;
+
                         }
                         else{
                             General.localizacion=null;  //-->   Para que no apunte a cualquier lado <--
@@ -137,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
 
         //-->   Tendria que simplificar este codigo para que no se vea tan feo en la forma de pedir la informacion  <--
 
@@ -171,35 +177,6 @@ public class MainActivity extends AppCompatActivity {
                 TokenObtenido=false;
             }
         });
-        Intent intent=new Intent(getApplicationContext(),ServiAlerta.class);
-       /* long Intervalor=1000*30;    //-->   Cada Minuto <--
-        long firstTriggerMillis = System.currentTimeMillis() + Intervalor;
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstTriggerMillis, Intervalor,pendingIntent);
-*/
-         AlarmManager alarmMgr;
-         PendingIntent alarmIntent;
-
-
-        //-->   Obtengo una instancia del servicio de manejos de alarmas    <--
-        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        // Crear un Intent para el servicio
-        Intent intentT = new Intent(this, ServiAlerta.class);
-        // Crear un PendingIntent para la alarma
-        alarmIntent = PendingIntent.getService(this, 0, intentT, PendingIntent.FLAG_MUTABLE);
-        // Establecer la hora de inicio de la alarma
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(0);
-        calendar.set(Calendar.HOUR_OF_DAY, Hora);
-        calendar.set(Calendar.MINUTE, Minuto);
-        //-->   Programo la alarma  <--
-        //-->   Aca se relanza la alarma por lo tanto si opmito este codigo no se relanzaria <--
-
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, alarmIntent);
-
-        //startService(intent);
-
     }
     public void CargaShared(){
         sharedPreferences= getSharedPreferences(General.PalabraSharedPref, Context.MODE_PRIVATE);

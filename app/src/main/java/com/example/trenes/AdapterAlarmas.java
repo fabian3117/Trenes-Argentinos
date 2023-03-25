@@ -35,6 +35,7 @@ public class AdapterAlarmas extends RecyclerView.Adapter<AdapterAlarmas.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView AlertaRamal,AlertHora;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             AlertaRamal=itemView.findViewById(R.id.AlertaRamal);
